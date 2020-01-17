@@ -1,0 +1,72 @@
+[
+    {
+        "id": 0,
+        "code": "DTO0000",
+        "discount_perc": 1.00
+    },
+    {
+        "id": 1,
+        "code": "DTO0001",
+        "discount_perc": 2.00
+    },
+    {
+        "id": 2,
+        "code": "DTO0002",
+        "discount_perc": 2.50
+    },
+    {
+        "id": 3,
+        "code": "DTO0003",
+        "discount_perc": 3.00
+    },
+    {
+        "id": 4,
+        "code": "DTO0004",
+        "discount_perc": 5.00
+    },
+    {
+        "id": 5,
+        "code": "DTO0005",
+        "discount_perc": 7.00
+    },
+    {
+        "id": 6,
+        "code": "DTO0006",
+        "discount_perc": 10.50
+    },
+    {
+        "id": 7,
+        "code": "DTO0007",
+        "discount_perc": 15.00
+    },
+    {
+        "id": 8,
+        "code": "DTO0008",
+        "discount_perc": 20.00
+    },
+    {
+        "id": 9,
+        "code": "DTO0009",
+        "discount_perc": 21.00
+    },
+    {
+        "id": 10,
+        "code": "DTO0010",
+        "discount_perc": 30.00
+    },
+    {
+        "id": 11,
+        "code": "DTO0011",
+        "discount_perc": 40.00
+    },
+    {
+        "id": 12,
+        "code": "DTO0012",
+        "discount_perc": 50.00
+    },
+    {
+        "id": 13,
+        "code": "DTO0013",
+        "discount_perc": 70.00
+    } 
+]

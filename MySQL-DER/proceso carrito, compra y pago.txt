@@ -1,0 +1,61 @@
+Old School Store
+
+Cart:
+El usuario NO LOGUEADO debe loguearse para poder agregar al carrito un item (idem favoritos).
+Antes de agregar un nuevo item a un carrito de un usuario, se verifica si tiene un 'cart' ya
+generado y en estado 'open', trayendo por seguridad y a fin de evitar errores del servidor,
+el ultimo generado en ese estado 'open'.
+En caso de no existir tal, genera un nuevo 'cart' con referencia a ese usuario y entonces si
+agrega un nuevo 'cart_product' referido a él.
+En el proceso de eliminar TODOS los items del carrito, se mantiene dicho carrito en estado 'open'
+para futuro uso.
+
+
+1)Purchase > Payment:
+El proceso de compra comienza al presionar el boton de compra en la vista de carrito, el cual envia
+por $request el 'car_id' como verificacion, generando ahora una nueva compra o un nuevo
+'purchase' anclado a este carrito, cuyas claves foraneas shipment_id, discount_id y paymentcard_id
+tengan valor NULO hasta tanto no se avance en el proceso de registro de la compra.
+El caso de 'paymentmethod_id' POR AHORA solo sera id = 2 el cual corresponde al pago con tarjeta de credito.
+
+Esta operacion se crea a traves de PurchasesController@store y luego de completarse, se redirige a la web 
+'/payment' por metodo GET a la cual solo se deberia poder acceder si la peticion estaba referida a una compra 
+recientemente creada. Para ello se verifica a traves de una propiedad de 'cart' la cual deberia devolver un purchase_id, 
+sino deberia rechazar el acceso. 
+Ahora el carrito que estaba en estado 'open' pasa a un segundo estado que es 'payment', referido al proceso actual.
+
+La operacion continua con la creacion de un nuevo 'paymentcard' con los datos que llegaron a traves de $request
+en la url '/payment' por metodo POST, ademas edita este mismo dato 'paymentcard_id' en 'purchase' para luego si 
+continuar con el siguiente paso, redirigiendo a la url '/shipment' por metodo GET.
+
+
+2)Purchase > Shipment:
+Luego de haber generado la compra 'purchase' y haberse registrado correctamente los datos de la tarjeta,
+se verifica ahora si 'purchase' tiene ya una tarjeta asociada a la compra, lo cual permite cargar los datos del envio,
+creando un nuevo 'shipment' asociado a 'addresses' y su correspondiente 'user_address'.
+Si se opta por utilizar alguna direccion asociada al usuario, sera necesario tildar la opcion, la cual estará disponible
+solo si el usuario ya tiene algun dato de direccion que le corresponda.
+Al tildar la opcion si esta disponible, se traen todos los datos que se cargaron en el momento de registro y se permite
+editarlos o completarlos, segun corresponda.
+a traves de la misma direccion '/shipment' por metodo POST. Ademas se modifica el campo 'shipment_id' en 'purchase',
+redirigiendo finalmente a '/review' por metodo GET.
+
+
+3)Purchase > Review
+La revision de compra se hace si el resto de los id foraneos de 'purchase' estan completos y/o si el estado de 'cart'
+esta en review.
+En esta vista, se puede agregar un descuento general a la compra mediante el boton correspondiente de CUPON.
+Se pueden eliminar varios items de la compra antes de confirmar, pero al menos UN PRODUCTO debe quedar ligado a la compra
+antes de confirmarla o cancelarla.
+Si se confirma, se cierra la compra modificando el estado del 'cart' a closed y modificando el stock de c/item.
+Si se cancela, se anula la compra y todo lo referente a ella modificando el estado de 'cart' a cancelled.
+
+
+-------------------------------------
+Cosas para agregar:
+
+Ver/Editar la direccion de envio segun lo que se cargo inicialmente en Register. Puede ser tildado con javascript y un form
+
+Una pagina del Administrador donde peuda ver las ordenes cerradas o pagadas para poder cargar el dato de fecha de envio.
+
+Una pagina del Customer donde pueda ver la orden actualizada, si fue enviada y hacer un comentario luego (Mis Compras).

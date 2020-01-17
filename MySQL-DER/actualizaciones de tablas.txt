@@ -1,0 +1,40 @@
+Se agrega columna 'status' en tabla 'carts'
+
+1) php artisan make:migration add_status_to_carts_table --table=carts
+
+2) Migration:
+
+    public function up()
+    {
+        Schema::table('carts', function (Blueprint $table) {
+            $table->string('status')->after('user_id');
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('carts', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
+    }
+
+-------------------------------------------------------------------------
+Se agrega columna 'product_id' en tabla 'cart_product'
+
+1) php artisan make:migration add_product_qty_to_cart_product_table --table=cart_product
+
+2) Migration:
+
+    public function up()
+    {
+        Schema::table('cart_product', function (Blueprint $table) {
+            $table->unsignedBigInteger('product_qty')->after('product_id');
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('cart_product', function (Blueprint $table) {
+            $table->dropColumn('product_qty');
+        });
+    }

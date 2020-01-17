@@ -1,0 +1,113 @@
+[
+    {
+        "id": 0,
+        "user_id": 0,
+        "address": "",
+        "city": "",
+        "state": "Capital Federal",
+        "zip": "",
+        "created_at": 1574914750,
+        "updated_at": null
+    },
+    {
+        "id": 1,
+        "user_id": 1,
+        "address": "Teniente Gral. Lonardi 1465",
+        "city": "Beccar, San Isidro",
+        "state": "Buenos Aires",
+        "zip": "1643",
+        "created_at": 1574914751,
+        "updated_at": 1576622112
+    },
+    {
+        "id": 2,
+        "user_id": 2,
+        "address": "",
+        "city": "Bragado",
+        "state": "Buenos Aires",
+        "zip": "",
+        "created_at": 1574914752,
+        "updated_at": null
+    },
+    {
+        "id": 3,
+        "user_id": 3,
+        "address": "La Rabida 1969",
+        "city": "San Isidro",
+        "state": "Buenos Aires",
+        "zip": "1643",
+        "created_at": 1574914753,
+        "updated_at": null
+    },
+    {
+        "id": 4,
+        "user_id": 4,
+        "address": "",
+        "city": "",
+        "state": "Catamarca",
+        "zip": "",
+        "created_at": 1574914754,
+        "updated_at": null
+    },
+    {
+        "id": 5,
+        "user_id": 5,
+        "address": "Cochabamba 1600",
+        "city": "",
+        "state": "Tucum\u00e1n",
+        "zip": "",
+        "created_at": 1574914755,
+        "updated_at": null
+    },
+    {
+        "id": 6,
+        "user_id": 6,
+        "address": "",
+        "city": "Carlos Paz",
+        "state": "C\u00f3rdoba",
+        "zip": "",
+        "created_at": 1574914756,
+        "updated_at": null
+    },
+    {
+        "id": 7,
+        "user_id": 7,
+        "address": "",
+        "city": "Bariloche",
+        "state": "R\u00edo Negro",
+        "zip": "",
+        "created_at": 1574914757,
+        "updated_at": null
+    },
+    {
+        "id": 8,
+        "user_id": 8,
+        "address": "Av. 1",
+        "city": "Caleta Olivia",
+        "state": "Santa Cruz",
+        "zip": "",
+        "created_at": 1574914758,
+        "updated_at": null
+    },
+    {
+        "id": 9,
+        "user_id": 9,
+        "address": "",
+        "city": "Concordia",
+        "state": "Entre R\u00edos",
+        "zip": "",
+        "avatar": "uploads\/f1f3a458930d2fbc754c00267d4ab373.png",
+        "created_at": 1574914759,
+        "updated_at": null
+    },
+    {
+        "id": 10,
+        "user_id": 10,
+        "address": "",
+        "city": "",
+        "state": "Corrientes",
+        "zip": "",
+        "created_at": 1576622360,
+        "updated_at": null
+    }
+]

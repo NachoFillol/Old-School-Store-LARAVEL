@@ -1,0 +1,58 @@
+Carts
+
+El carrito no tiene purchase_id
+
+
+----------------------------
+Purchases
+
+La compra tiene un carrito cart_id
+Al finalizar o dar a Comprar se genera un purchase_id, llevo el cart_id al purchase.
+Deberia tener claves foraneas a shipments y paymentmethods, no al reves.
+Quitar subtotal_price, se puede obtener a traves de carts>cart_product>product.
+No utilizar caracteres especiales (%) en las columnas.
+Para los discount (cupon) deberia haber una tabla con los cupones generados y su valor
+de descuento, que se relacionan con purchases (pagina mi carrito), para lo cual vamos
+a tener un 'discount_id' en purchases a modo de descuento gral sobre el Total de la compra.
+
+Opcional:
+La tabla discount "podria" vincularse tambien con product suponiendo que un articulo
+tenga un descuento especial (se puede generar un discount_id)
+
+---------------------------
+Paymentcards
+
+Se vincula directamente al usuario, mediante clave foranea, es decir,
+paymentcards tiene un user_id.
+
+
+---------------------------
+Cart_product
+
+Se va a utilizar para insertar dentro de 1 carrito X's cantidad de productos.
+No lleva qty, currency ni price.
+Los articulos se insertan de a 1, uno por fila.
+Desde Carts se consulta a la tabla cart_product por su propio id (el de carts),
+no es necesario una clave foranea para ello.
+
+--------------------------
+Addresses (tabla nueva)
+
+Con los campos: address, city, state, zip.
+Se vincula con users a traves de user_id.
+
+--------------------------
+Shipments
+
+Se vincula con addresses o address_id.
+Al momento de comprar, o bien creo un registro nuevo dentro de addresses o tomo el address
+vinculado al user_id (que cargo en el registro).
+
+Si el mismo usuario tiene MAS DE UNA DIRECCION, deberia existir una tabla intermedia entre 
+users y addresses, se llamaria 'user_address' que va a tener sus claves foraneas.
+
+-------------------------
+Products
+
+Campo 'status' podria ser directamente un booleano.
+
