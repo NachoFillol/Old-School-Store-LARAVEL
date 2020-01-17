@@ -56,6 +56,6 @@ Cosas para agregar:
 
 Ver/Editar la direccion de envio segun lo que se cargo inicialmente en Register. Puede ser tildado con javascript y un form
 
-Una pagina del Administrador donde peuda ver las ordenes cerradas o pagadas para poder cargar el dato de fecha de envio.
+Una pagina del Administrador donde pueda ver las ordenes cerradas o pagadas para poder cargar el dato de fecha de envio.
 
 Una pagina del Customer donde pueda ver la orden actualizada, si fue enviada y hacer un comentario luego (Mis Compras).

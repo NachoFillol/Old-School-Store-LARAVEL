@@ -36,13 +36,16 @@ Categoría {{$category->name}}
 
         @foreach ($products as $product)
         <div class="card">
-            <img src="{{ asset($product->image) }}" title="Envios a todo el pais" class="card-img-top" alt="...">
+            <div class="img">
+                <img src="{{ asset($product->image) }}" title="Envios a todo el pais" class="card-img-top" alt="...">
+            </div>
             <div class="card-body">
                 <h5 class="card-title">{{$product->name}}</h5>
                 <p class="precio">{{$product->currency . $product->price}}</p>
                 <p class="card-text">{{$product->description_general}}</p>
-                <button type="button" name="button" class="btn btn-sm btn-primary my-2 my-sm-0"> <a
-                        href="/product/{{ $product->id }}">Ver Producto</a></button>
+                <button type="button" name="button" class="btn btn-sm btn-primary my-2 my-sm-0"> 
+                    <a href="/product/{{ $product->id }}">Ver Producto</a>
+                </button>
             </div>
         </div>
         @endforeach

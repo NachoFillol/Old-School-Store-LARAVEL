@@ -204,7 +204,7 @@
 
     <div class="form-group">
         <input type="hidden" name="code" value="{{ old('code', $code) }} ">
-        @if ($method === 'patch')
+        @if ($method === 'patch' || $method === 'post')
         <button type="submit" class="btn btn-success">Guardar</button>
         @elseif ($method === 'delete')
         <button type="submit" class="btn btn-danger">Eliminar</button>

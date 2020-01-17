@@ -48,13 +48,13 @@ Mis Favoritos
                                                 <i class="fas fa-shopping-cart"></i> </button>
                                         </form>
 
-                                        <form action="{{ asset('customer/favorites/product/'. $favorite->id) }}"
+                                        <form action="{{ asset('customer/favorites') }}"
                                             method="post">
                                             @csrf
-                                            @method('delete')
+                                            @method('patch')
                                             <input type="hidden" name="user_id" value="{{ $user->id }}">
                                             <button class="btn btn-danger btn-sm" data-toggle="tooltip"
-                                                title="Eliminar de Favoritos" name="del_id"
+                                                title="Eliminar de Favoritos" name="add_del"
                                                 value="{{ $favorite->id }}" data-original-title="Remove from wishlist">
                                                 <i class="fa fa-times"></i>
                                             </button>

@@ -1116,11 +1116,24 @@ body {
   margin-top: 5px;
 }
 
+.detalleproductos div.img {
+  padding: 1%;
+}
+
+.detalleproductos img {
+  width: 99%;
+}
+
+.detalleproductos .card-body {
+  flex: unset;
+}
+
 .detalleproductos .card {
   align-self: stretch; /* en resoluciones chicas estira el contenido */
   margin: 1%;
   margin-top: 0;
   background-color: #89ffb5;
+  justify-content: space-between;
 }
 
 .detalleproductos .card .precio {
