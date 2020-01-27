@@ -45,6 +45,10 @@ class User extends Authenticatable
     ];
 
 
+    public function getNombreCompleto() {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
     public function rol() {
         return $this->belongsTo('App\UserType', 'user_type_id');
     }
@@ -64,5 +68,10 @@ class User extends Authenticatable
 
     public function paymentcards() {
         return $this->hasMany('App\PaymentCard');
+    }
+
+    public function cartInProgress() 
+    {
+        return $this->carts()->with('purchases')->openCart()->latest()->first();
     }
 }

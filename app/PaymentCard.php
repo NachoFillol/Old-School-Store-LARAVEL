@@ -13,4 +13,22 @@ class PaymentCard extends Model
     public function user() {
         return $this->belongsTo('App\User');
     }
+
+    public function getIcon() 
+    {
+        $icons = [
+            3 => 'amex',
+            4 => 'visa',
+            5 => 'mastercard',
+            6 => 'discover',
+        ];
+
+        $firstDigit = $this->number[0];
+
+        if (array_key_exists($firstDigit, $icons)) {
+            return $icons[$firstDigit];
+        }
+
+        return null;
+    }
 }

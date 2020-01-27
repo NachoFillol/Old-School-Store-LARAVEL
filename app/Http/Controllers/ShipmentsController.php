@@ -31,15 +31,13 @@ class ShipmentsController extends Controller
     {
         // 4to PASO DE LA COMPRA
 
-        $logued = \Auth::user();
-
-        $openCart = $logued->carts()->openCart()->latest()->first();
+        $openCart = auth()->user()->cartInProgress();
 
         // Si No hay una Compra asociada a un carrito, redirige
-        if (! $openCart->purchases->first() && $openCart->status !== 'payment') {
+        if (! $openCart->purchases()->first() && $openCart->status !== 'payment') {
             return redirect('/customer/cart');
 
-        } elseif ($openCart->purchases->first()->shipment_id !== null) {
+        } elseif ($openCart->purchases()->first()->shipment_id !== null) {
             // Si la compra ya tiene una direccion de envio, redirige al prox paso
             return redirect('/customer/purchase/review');
         }
@@ -51,7 +49,12 @@ class ShipmentsController extends Controller
 
         $states = \DB::table('states')->get();
 
-        return view('customer.shipments.create', ['shipment' => new Shipment, 'states' => $states, 'openCart' => $openCart, 'user' => $logued]);
+        return view('customer.shipments.create', [
+            'shipment' => new Shipment, 
+            'states' => $states, 
+            'openCart' => $openCart, 
+            'user' => auth()->user()
+        ]);
     }
 
     /**
@@ -82,11 +85,9 @@ class ShipmentsController extends Controller
             'reception_day' => null
         ]);
 
-        $logued = \Auth::user();
+        $openCart = auth()->user()->cartInProgress();
 
-        $openCart = $logued->carts()->latest()->first();
-
-        $purchase = $openCart->purchases->first();
+        $purchase = $openCart->purchases()->first();
 
         // Se agrega el dato de la direccion de envio
         $purchase->update([
@@ -95,7 +96,7 @@ class ShipmentsController extends Controller
 
         // Se agrega una nueva direccion de envio del tipo user_address
         $new_user_address = UserAddress::Create([
-            'user_id' => $logued->id,
+            'user_id' => auth()->user()->id,
             'address_id' => $new_address->id,
         ]);
 

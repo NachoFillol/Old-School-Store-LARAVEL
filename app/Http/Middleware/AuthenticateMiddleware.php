@@ -15,6 +15,7 @@ class AuthenticateMiddleware
      */
     public function handle($request, Closure $next)
     {
+        // Si hay usuario logueado, continua con el $request y dirige a la pagina que deberia continuar
         if (\Auth::user() !== null) {
             return $next($request);
         }

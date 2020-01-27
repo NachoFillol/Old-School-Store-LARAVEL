@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Purchase;
 use App\Discount;
 use App\Product;
+use App\CartProduct;
 
 class PurchasesController extends Controller
 {
@@ -43,13 +44,12 @@ class PurchasesController extends Controller
         $this->validate($request, [
             'cart_id' => 'required|integer|min:1'
         ]);
-
-        $logued = \Auth::user();
-
-        $openCart = $logued->carts()->latest()->first();
-        //dd($openCart->purchases->isEmpty());
-        if ($openCart->status === 'open' && $openCart->purchases->isEmpty()) {
-            //$new_purchase = Purchase::create($request->all());
+    
+        $openCart = auth()->user()->cartInProgress();
+        
+        //dd($openCart->purchases()->first());  // Igual a null cuando aun no se ha generado una compra
+        
+        if ( $openCart->status === 'open' ) {
             $new_purchase = Purchase::create([
                 'cart_id' => $request->cart_id,
                 'shipment_id' => null,
@@ -65,12 +65,17 @@ class PurchasesController extends Controller
             ]);
 
         } elseif ($openCart->status === 'payment') {
+
             // Si esta en estado de carga de pago
             return redirect('/customer/purchase/payment');
+
         } elseif ($openCart->status === 'shipment') {
+
             // Si esta en estado de carga de envio
             return redirect('/customer/purchase/shipment');
+
         } else {
+
             // Si esta en estado de revision
             return redirect('/customer/purchase/review');
         }
@@ -88,14 +93,10 @@ class PurchasesController extends Controller
     {
         // 6to PASO DE LA COMPRA
 
-        $logued = \Auth::user();
-
-        $openCart = $logued->carts()->openCart()->latest()->first();  // Trae el primero de los ultimos carritos abiertos
-
-        //dd($openCart->products->isEmpty());
+        $openCart = auth()->user()->cartInProgress();  // Trae el primero de los ultimos carritos abiertos
 
         // Si el carrito no esta en estado de envio y la compra no tiene dato de envio, redirige
-        if ( ! $openCart->purchases->first() && $openCart->status !== 'shipment' ) {
+        if ( ! $openCart->purchases && $openCart->status !== 'shipment' ) {
            return redirect('/customer/cart');
         }
 
@@ -105,16 +106,16 @@ class PurchasesController extends Controller
         ]);
         
         return view('customer.purchases.show', [
-            'user' => $logued, 
+            'user' => auth()->user(), 
             'openCart' => $openCart, 
-            'sub1' => 0, 
-            'sub2' => 0, 
-            'sub3' => 0,
-            'subtot' => 0,
+            'subtot' => 0, 
+            'subtot_dto' => 0, 
+            'subt' => 0,
+            'subtot_iva' => 0,
             'total' => 0,
             'envio' => 120,
             'iva' => 21,
-            'oferta' => $openCart->purchases->first()->discount ? $openCart->purchases->first()->discount->discount_perc : 0,
+            'oferta' => (float)$openCart->purchases()->first()->getTotalDiscountAttribute(),
             'moneda' => null
         ]);
     }
@@ -137,12 +138,10 @@ class PurchasesController extends Controller
             
             if ($discount) {
 
-                $logued = \Auth::user();
-
-                $openCart = $logued->carts()->openCart()->latest()->first();  // Trae el primero de los ultimos carritos abiertos
+                $openCart = auth()->user()->cartInProgress();  // Trae el primero de los ultimos carritos abiertos
                 
                 //$purchase = Purchase::find($request->purchase_id);
-                $openCart->purchases->first()->update([
+                $openCart->purchases()->first()->update([
                     'discount_id' => $discount->id
                 ]);
 
@@ -180,12 +179,10 @@ class PurchasesController extends Controller
 
         // CONFIRMA LA COMPRA Y CIERRA EL CARRITO
 
-        $logued = \Auth::user();
-
-        $openCart = $logued->carts()->openCart()->latest()->first();  // Trae el primero de los ultimos carritos abiertos
+        $openCart = auth()->user()->cartInProgress();  // Trae el primero de los ultimos carritos abiertos
 
         //$purchase = Purchase::find($request->purchase_id);
-        $openCart->purchases->first()->update([
+        $openCart->purchases()->first()->update([
             'total_price' => $request->total_price,
             'shipping_price' => $request->shipping_price,
             'tax_perc' => $request->tax_perc
@@ -196,9 +193,20 @@ class PurchasesController extends Controller
             'status' => 'closed'
         ]);
 
-        // Modifica el Stock de c/producto
+        // Modifica el Stock de c/producto (Faltaria pasar a Inactivo?? no se veria en consultas de ordenes :()
         foreach ($openCart->products as $product) {
             $prod_qty = $product->pivot->product_qty;
+            
+            // Si NO hay stock del producto al confirmar, asigna cantidad 0 en el carrito
+            if($product->stock == 0) {
+                $upd_qty = CartProduct::where('product_id', $product->id)->first();
+                $upd_qty->update([
+                    'product_qty' => 0
+                ]);
+                $prod_qty = 0;  // Nuevo valor
+            }
+            
+            // Actualiza el Stock al/los producto
             $prod_to_upd = Product::find($product->id);
             $prod_to_upd->update([
                 'stock' => $prod_to_upd->stock - $prod_qty
@@ -222,9 +230,7 @@ class PurchasesController extends Controller
 
         // ANULA LA COMPRA CANCELANDO EL CARRITO
 
-        $logued = \Auth::user();
-
-        $openCart = $logued->carts()->openCart()->latest()->first();  // Trae el primero de los ultimos carritos abiertos
+        $openCart = auth()->user()->cartInProgress();  // Trae el primero de los ultimos carritos abiertos
 
         //$purchase = Purchase::find($request->purchase_id);
         // $openCart->purchases->first()->update([

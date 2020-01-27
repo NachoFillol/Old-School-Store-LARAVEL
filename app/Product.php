@@ -17,6 +17,17 @@ class Product extends Model
 
     protected $table = 'products';
 
+    protected $appends = [
+        'product_qty',
+    ];
+
+    // Atributos dependientes de 'appends'
+    public function getProductQty() 
+    { 
+        return ($this->pivot->product_qty <= $this->stock) ? $this->pivot->product_qty : 0;
+    }
+
+    
     public function category() {
         return $this->belongsTo('App\Category');
     }

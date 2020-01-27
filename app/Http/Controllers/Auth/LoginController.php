@@ -26,12 +26,15 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        // Si hay redireccion de otra pagina que no sea 'login', redirige segun la cookie
         if (\Cookie::has('ref')) {
             return redirect(\Cookie::get("ref"));
         }
 
+        // Si el usuario hace login en la pagina de 'login, redirige al home
         if($user){
-            return redirect(url()->previous());
+            return redirect('/');
+            //return redirect(url()->previous());
         }
     }
 

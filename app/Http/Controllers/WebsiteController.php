@@ -62,10 +62,19 @@ class WebsiteController extends Controller
      */
     public function index()
     {
+
+        return view('website.index', [ /*'user' => $user, /*'msg' => $msg*/]);
+            
+        $products = DB::table('products')->whereBetween('id',[1,13])->get();
+        //$products = Product::whereBetween('id',[1,13])->get();
+        $array = $products->toArray();
+
+        //$random_item = $array[mt_rand(0, count($array) - 1)];   // Devuelve un random de 1 producto del array
+
+        // Genera un nuevo array random de 3 id's de productos
+        $randomProducts = array_rand($array,3);
+        //dd($randomProducts);
         
-        $user = User::find(2);
-        
-        return view('website.index', ['user' => $user, /*'msg' => $msg*/]);
 
         // $msg = null;
         // if (session('message') !== null) {

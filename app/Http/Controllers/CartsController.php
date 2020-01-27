@@ -49,7 +49,7 @@ class CartsController extends Controller
 
             return redirect()->back()->with('message', 'Debe elegir una cantidad !!!'); // Vuelve a la pagina de donde vino con un mensaje
         
-        } else {
+        } elseif ( Product::find($request->add_id)->stock > 0 ) {
 
             // Si el usuario no tiene carrito en estado abierto, crea uno nuevo
             if ($request->cart_id === null) {
@@ -66,6 +66,10 @@ class CartsController extends Controller
                 'product_qty' => $request->prod_qty,
             ]);
 
+            \Session::flash('alert-success', 'Producto agregado al Carrito !!!');
+
+            return redirect()->back()->with('message', 'Producto agregado al Carrito !!!'); // Vuelve a la pagina de donde vino con un mensaje
+
             // // Agrega en la DB tantas filas como productos se haya elegido
             // for ($i=0; $i < (int)$request->prod_qty; $i++) { 
             //     $new_cart_product = CartProduct::create([
@@ -73,11 +77,15 @@ class CartsController extends Controller
             //         'product_id' => $request->add
             //     ]);
             // }
-        }
-        
-        \Session::flash('alert-success', 'Producto agregado al Carrito !!!');
 
-        return redirect()->back()->with('message', 'Producto agregado al Carrito !!!'); // Vuelve a la pagina de donde vino con un mensaje
+        } else {
+
+            \Session::flash('alert-danger', 'Producto no disponible !!!');
+
+            return redirect()->back()->with('message', 'Producto no disponible !!!'); // Vuelve a la pagina de donde vino con un mensaje
+
+        }
+            
     }
 
     /**
@@ -88,11 +96,14 @@ class CartsController extends Controller
      */
     public function show()
     {
-        $logued = \Auth::user();
+        $openCart = auth()->user()->cartInProgress();  // Trae el primero de los ultimos carritos abiertos
         
-        $openCart = $logued->carts()->openCart()->latest()->first();  // Trae el primero de los ultimos carritos abiertos
-        
-        return view('customer.carts.show', ['user' => $logued, 'openCart' => $openCart, 'subtot' => 0, 'moneda' => null]);
+        return view('customer.carts.show', [
+            'user' => auth()->user(), 
+            'openCart' => $openCart, 
+            'subtot' => 0, 
+            'moneda' => null
+        ]);
 
         //dd($user->carts()->openCart());
         //$cart = $user->carts[0]->products;
@@ -213,9 +224,7 @@ class CartsController extends Controller
 
         if ($verify_cart_qty === 0) {
 
-            $logued = \Auth::user();
-
-            $openCart = $logued->carts()->openCart()->latest()->first();
+            $openCart = auth()->user()->cartInProgress();
 
             // Se modifica el estado del carrito
             $openCart->update([

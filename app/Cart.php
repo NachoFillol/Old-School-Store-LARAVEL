@@ -18,8 +18,8 @@ class Cart extends Model
         return $this->belongsToMany('App\Product', 'cart_product', 'cart_id', 'product_id')->withPivot('product_qty');  // withPivot le pide 'product_qty' a la tabla intermedia 'cart_product'
     }
 
-    public function purchases() {
-        return $this->hasMany('App\Purchase');
+    public function purchases() {               // CORREGIR A PURCHASE !!!
+        return $this->hasOne('App\Purchase');   
     }
 
     public function scopeOpenCart($query) 
@@ -30,15 +30,15 @@ class Cart extends Model
         return $query;
     }
 
-    public function scopeClosedCarts($query) {
-
+    public function scopeClosedCarts($query) 
+    {
         $query->where('status', 'closed')->orderBy('updated_at', 'desc');
 
         return $query;
     }
 
-    public function scopeCancelledCarts($query) {
-
+    public function scopeCancelledCarts($query) 
+    {
         $query->where('status', 'cancelled')->orderBy('updated_at', 'desc');
 
         return $query;

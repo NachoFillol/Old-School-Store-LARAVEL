@@ -31,15 +31,15 @@ class PaymentCardsController extends Controller
     {
         // 2do PASO DE LA COMPRA
 
-        $logued = \Auth::user();
-
-        $openCart = $logued->carts()->openCart()->latest()->first();
+        $openCart = auth()->user()->cartInProgress();
 
         // Si No hay una Compra asociada a un carrito, redirige
-        if (! $openCart->purchases->first() && $openCart->status !== 'open') {
+        if (! $openCart->purchases()->first() && $openCart->status !== 'open') {
+
             return redirect('/customer/cart');
 
-        } elseif ($openCart->purchases->first()->paymentcard_id !== null) {
+        } elseif ($openCart->purchases()->first()->paymentcard_id !== null) {
+
             // Si la compra ya tiene una tarjeta asociada, redirige al prox paso
             return redirect('/customer/purchase/shipment');
         }
@@ -49,7 +49,11 @@ class PaymentCardsController extends Controller
             'status' => 'payment'
         ]);
 
-        return view('customer.paymentcards.create', ['paymentcard' => new PaymentCard, 'openCart' => $openCart, 'user' => $logued]);
+        return view('customer.paymentcards.create', [
+            'paymentcard' => new PaymentCard, 
+            'openCart' => $openCart, 
+            'user' => auth()->user()
+        ]);
     }
 
     /**
@@ -74,11 +78,9 @@ class PaymentCardsController extends Controller
         
         $new_paymentcard = PaymentCard::Create($request->all());
 
-        $logued = \Auth::user();
+        $openCart = auth()->user()->cartInProgress();
 
-        $openCart = $logued->carts()->latest()->first();
-
-        $purchase = $openCart->purchases->first();
+        $purchase = $openCart->purchases()->first();
 
         // Se agrega el dato de la tarjeta a la compra
         $purchase->update([
@@ -100,7 +102,7 @@ class PaymentCardsController extends Controller
     {
         $payments = PaymentCard::find($id);
 
-        return view('website.paymentcards.show', ['payments' => $payments,]);
+        return view('website.paymentcards.show', ['payments' => $payments]);
     }
 
     /**

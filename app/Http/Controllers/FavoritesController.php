@@ -40,8 +40,7 @@ class FavoritesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        
+    { 
         $new_fav = Favorite::create([
             'user_id' => $request->user_id,
             'product_id' => $request->add_del
@@ -60,11 +59,9 @@ class FavoritesController extends Controller
      */
     public function show()
     {
-        $logued = \Auth::user();
+        $openCart = auth()->user()->cartInProgress();
 
-        $openCart = $logued->carts()->openCart()->first();
-
-        return view('customer.favorites.show', ['user' => $logued, 'openCart' => $openCart]);
+        return view('customer.favorites.show', ['user' => auth()->user(), 'openCart' => $openCart]);
 
         //$user = User::where('code', $user_code)->firstOrFail(); // Devuelve un user o falla. Con ->get() lo devuelve dentro de un array [0]
     }
