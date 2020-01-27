@@ -1,0 +1,49 @@
+Faltantes:
+
+-Revisar Resgister que tira un error a pesar que termina guardando todo.
+-En la pagina de admin/users/list faltarian hacer funcionar los links de "ver usuario" y "editar usuario". Solo funciona "eliminar".
+-En una peticion de agregar a favoritos o a carrito mientras no esta el usuario logueado, luego del reenvio no solo deberia redirigir
+a la pagina de donde vino, sino terminar el proceso que quedo incompleto.
+-Pagina de carga de tarjeta, poder visualizar si el usuario ya tiene una y no permitir el duplicado de la misma.
+-Pagina de carga de Shipment, poder visualizar las direcciones que tiene el user y/o editar o elegirla, segun corresponda.
+-Luego de hacer Review de la compra, poder generar una "factura" y/o un link para poder completarlo en Purchases (invoice url).
+-El admin deberia poder cargar la fecha de envio de la compra y la fecha de recepcion. No hay una pagina para hacer esto aun.
+-Carrousel inicial hacerlo random respecto a los productos, mediante JS, o mediante un array que contenga las url.
+-Agregar mas funcionalidades JS al pasar sobre una foto, etc. Tambien al registrarse ontime.
+
+
+Solucionado:
+-Pagina para el comprador por ver las compras realizadas y hacer algun comentario
+-Tracking order + Transactions
+-Hacer que cuando se llegue stock 0, se inhabilite el producto? Se hace ver cuando no hay stock
+
+
+
+
+Codigos de Tarjetas:
+El usuario tan solo tiene que observar el primer dígito de la tarjeta, 
+que están reservados para identificar a la compañía o el sector al que pertenece:
+
+Las tarjetas Visa siempre comienzan con el número 4.	<i class="fab fa-cc-visa"></i>		f1f10
+Las tarjetas Mastercard empiezan con el número 5.	<i class="fab fa-cc-mastercard"></i>	f1f1
+Las tarjetas Discovery Card le corresponde el 6 mientras que <i class="fab fa-cc-discover"></i>	f1f2
+Las tarjetas American Express empiezan siempre con el 3.	<i class="fab fa-cc-amex"></i>	f1f3
+
+Aunque la mayoría de las tarjetas de crédito ó débito del mercado tienen 16 dígitos, 
+dependiendo de la empresa que la expida, este número puede ir de los 14 a los 19 dígitos.
+
+Credit Card (generico):	<i class="far fa-credit-card"></i>	f09d
+			<i class="fas fa-credit-card"></i>	f09d
+PayPal:			<i class="fab fa-cc-paypal"></i>	f1f4
+Diners-Club:		<i class="fab fa-cc-diners-club"></i>	f24c
+Apple-Pay:		<i class="fab fa-cc-apple-pay"></i>	f416
+Amazon-Pay:		<i class="fab fa-cc-amazon-pay"></i>	f42d
+Stripe:			<i class="fab fa-cc-stripe"></i>	f1f5
+JCB:			<i class="fab fa-cc-jcb"></i>		f24b
+
+Money(generico):	<i class="fas fa-money-bill-alt"></i>	f3d1
+			<i class="far fa-money-bill-alt"></i>	f3d1
+Money(check):		<i class="fas fa-money-check-alt"></i>	f53c
+			<i class="fas fa-money-check"></i>	f53c
+
+
