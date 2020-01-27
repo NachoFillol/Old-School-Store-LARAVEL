@@ -82,6 +82,11 @@ Route::group(['prefix' => 'customer', 'middleware' => 'auth'], function() {
 	Route::patch('/purchase/review', 'PurchasesController@edit');	// Ruta para editar la compra final (metodo patch)
 	Route::patch('/purchase/confirm', 'PurchasesController@update');	// Ruta para confirmar la compra y cerrar el carrito
 	Route::delete('/purchase/confirm', 'PurchasesController@destroy');	// Ruta para cancelar la comprar y cancelar el carrito
+	// ORDERS // TRACKING // TRANSACTIONS
+	Route::get('/order/history', 'OrdersController@index');	// Ruta para visualizar las ordenes de compra realizadas - historial
+	Route::post('/order/history', 'OrdersController@comments');	// Ruta para comentar las ordenes de compra realizadas (metodo post))
+	Route::get('/order/transaction', 'OrdersController@trans');	// Ruta para visualizar las ordenes de compra realizadas - transacciones
+	Route::post('/order/tracking', 'OrdersController@track');	// Ruta para visualizar las ordenes de compra realizadas - tracking (metodo post)
 });
 
 // CUSTOMER
