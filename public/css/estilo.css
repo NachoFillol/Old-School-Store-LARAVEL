@@ -156,6 +156,50 @@ div#avatar-block {
   margin-left: 10px;*/
 }
 
+/* HEADER - CARRITO + FAVORITOS */
+
+/* Pill sobre carrito y/o favorito */
+.widget-header .notify {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+}
+.notify {
+  position: absolute;
+  top: -4px;
+  right: -10px;
+  display: inline-block;
+  padding: .25em .6em;
+  /* font-size: 12px; */
+  line-height: 1;
+  text-align: center;
+  border-radius: 3rem;
+  color: #fff;
+  background-color: #fa3434;
+}
+
+/* hipervinculo carrito y/o favorito*/
+.widget-header {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+/* div contenedor carrito y/o favorito */
+.icon-sm {
+  width: 30px;
+  height: 30px;
+  line-height: 30px !important;
+  /* font-size: 20px; */
+}
+.icon-xs, .icon-sm, .icon-md, .icon-lg {
+  display: inline-block;
+  text-align: center;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-box-flex: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+}
 
 /* HEADER - BARRA NAVEGABLE CATEGORIAS */
 
@@ -1100,6 +1144,144 @@ body {
   #review-cart output#dropdown {
     margin-bottom: 150px;
   }
+}
+
+/* --------------------- CSS PAGINA MIS ORDENES ---------------------- */
+
+.row {
+  margin-right: unset;
+  margin-left: unset;
+}
+
+#orders aside, article#transaction, article#tracking, main {
+  margin-bottom: 150px;
+}
+
+.img-sm {
+  width: 80px;
+  height: 80px;
+}
+
+/* ORDENES */
+
+a:hover {
+  text-decoration: none;
+}
+.img-xs {
+  width: 40px;
+  height: 40px;
+}
+
+textarea {
+  margin-bottom: 0.5rem;
+}
+
+textarea.form-control {
+  font-size: unset;
+}
+
+.b {
+  font-weight: 600;
+}
+
+/* TRANSACTIONS */
+
+ul.row, ul.row-sm {
+  list-style: none;
+  padding: 0;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* TRACKING */
+
+div#tracking {
+  padding: 0 15px;
+}
+
+ul.row, ul.row-sm {
+  list-style: none;
+  padding: 0;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.tracking-wrap {
+  position: relative;
+  background-color: #ddd;
+  height: 7px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 60px;
+  margin-top: 50px;
+}
+.tracking-wrap .step {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  width: 25%;
+  margin-top: -18px;
+  text-align: center;
+  position: relative;
+}
+.tracking-wrap .step.active:before {
+  background: #3167eb;
+}
+
+.tracking-wrap .step::before {
+  height: 7px;
+  position: absolute;
+  content: "";
+  width: 100%;
+  left: 0;
+  top: 18px;
+}
+.tracking-wrap .step.active .icon {
+  background: #3167eb;
+  color: #fff;
+}
+
+.tracking-wrap .icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+  border-radius: 100%;
+  background: #ddd;
+}
+.tracking-wrap .step.active .text {
+  font-weight: 400;
+  color: #000;
+}
+
+.tracking-wrap .text {
+  display: block;
+  margin-top: 7px;
+}
+.fa-box:before {
+  content: "\f466";
+}
+.itemside {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+.itemside .aside {
+  position: relative;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+.itemside .info {
+  padding-left: 15px;
+  padding-right: 7px;
 }
 
 
