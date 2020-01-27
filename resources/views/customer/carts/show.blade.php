@@ -6,13 +6,26 @@ Mi Carrito
 
 
 @section('content')
+<!-- Calculo auxiliar de Cantidad de Productos En Carrito/Disponibles -->
+<?php
+$total_qty = 0;
+if ( $openCart ) {
+    foreach ($openCart->products as $product) {
+        $total_qty = $total_qty + $product->getProductQty();
+    }
+}
+?>
 
 <div class="container" id="mi-carrito">
 
     <div class="row">
         <div class="col">
             <h4>Mi Carrito <i class="fa fa-shopping-cart" aria-hidden="true"></i></h4>
-            <h6>Cod Usuario ({{ $user->code }}) | Cantidad Items (<?= $openCart ? $openCart->products->count():0 ?>) | Total Productos ({{ $openCart ? $openCart->products->sum('pivot.product_qty') : '0'}})</h6>
+            <h6>Cod Usuario ({{ $user->code }}) 
+                | Cantidad Items (<?= $openCart ? $openCart->products->count():0 ?>) 
+                | Total Productos Disponibles ({{$total_qty}}) 
+                <!-- | Total Productos ({{ $openCart ? $openCart->products->sum('pivot.product_qty') : '0' }}) -->
+            </h6>
 
             <output>
                 <article class="card">
@@ -38,7 +51,7 @@ Mi Carrito
                                         <tbody>
                                             @if ( $openCart )
                                             @foreach ($openCart->products as $product)
-                                            
+
                                             <!-- Agrupa los productos del carrito con $product->id como su indice -->
                                             <!-- <php $prod_qty = $openCart->products->groupBy('id')[$product->id] ?> -->
                                             <!-- Consulta si el producto existe como favorito, sino devuelve null -->
@@ -47,7 +60,7 @@ Mi Carrito
                                             <tr>
                                                 <td>
                                                     <figure class="itemside align-items-center">
-                                                        <div class="aside"> <img style="width: 80px; height: 80px"
+                                                        <div class="aside"> <img style="{{ @(! $product->stock > 0) ? 'opacity:0.25' : 'null' }}"
                                                                 src="{{ asset($product->image) }}" class="img-sm">
                                                         </div>
                                                         <figcaption class="info">
@@ -69,7 +82,7 @@ Mi Carrito
                                                 <td><div>{{ $product->stock }} uni</div></td>
 
                                                 <td>
-                                                
+                                                    @if ($product->stock > 0)
                                                     <form action="{{ url('customer/cart') }}"
                                                         method="post" style="display: inline-flex">
                                                         @csrf
@@ -89,7 +102,10 @@ Mi Carrito
                                                             <i class="far fa-save" style="color: white;"></i>
                                                         </button>
                                                     </form>
-                                                    
+                                                    @else
+                                                    <i>N/D</i>
+                                                    @endif
+
                                                     <!-- Quantity Input mediante Form:post -->
                                                     <!-- <form action="" method="post">
                                                         <input type="hidden" name="stock_qty" value="{{ $product->stock }}">
@@ -122,17 +138,21 @@ Mi Carrito
                                                     </section> -->
 
                                                 </td>
-                                                    <!-- <br> -->
-                                                    <!-- <br> -->
-                                                    <!-- <div> -->
-                                                        <!-- Stock: {{ $product->stock }} uni -->
-                                                    <!-- </div> -->
+                                                        <!-- <br> -->
+                                                        <!-- <br> -->
+                                                        <!-- <div> -->
+                                                            <!-- Stock: {{ $product->stock }} uni -->
+                                                        <!-- </div> -->
                                                 <td>
                                                     <div class="price-wrap">
                                                         <var class="price"><?= $product->currency . number_format($product->price * $product->pivot->product_qty, 2, ',', '') ?>
                                                         </var>
-                                                        <?php $subtot = $subtot + ($product->price * $product->pivot->product_qty) ?>
                                                         <!-- Hace la cuenta parcial -->
+                                                        @if($product->stock > 0)
+                                                        <?php $subtot = $subtot + ($product->price * $product->pivot->product_qty) ?>
+                                                        @else
+                                                        <?php $subtot = $subtot ?>
+                                                        @endif
                                                         <?php $moneda = $product->currency ?>
                                                         <br>
                                                         <small class="text-muted">
@@ -145,7 +165,7 @@ Mi Carrito
 
                                                     <!-- Botón Agregar/Eliminar de Favoritos -->
                                                     <form
-                                                        action="{{ asset('customer/favorites') }}"
+                                                        action="{{ url('customer/favorites') }}"
                                                         method="post">
                                                         @csrf
                                                         @if ($is_favorite)
@@ -228,7 +248,7 @@ Mi Carrito
                                     </dl>
                                     <dl class="dlist-align">
                                         <dt>Descuento:</dt>
-                                        <dd class="text-right text-danger">- $0.00</dd>
+                                        <dd class="text-right text-danger">- $0.00 %</dd>
                                     </dl>
                                     <dl class="dlist-align">
                                         <dt>Total (s/imp):</dt>
@@ -242,7 +262,7 @@ Mi Carrito
                                     <form action="{{ url('customer/purchase') }}" method="post" id="buy-button">
                                         @csrf
                                         @method('post')
-                                        @if ( $openCart )
+                                        @if ( $openCart && $total_qty > 0)
                                         <button type="submit" name="cart_id" value="{{ $openCart ? $openCart->id:null }}" 
                                             class="btn btn-primary btn-block"
                                             style="{{ $openCart->products->isEmpty() ? 'background-color: gray; cursor: not-allowed' : null }}"
@@ -252,7 +272,7 @@ Mi Carrito
                                         @else
                                         <div class="btn btn-primary btn-block" 
                                             style="background-color: gray; cursor: not-allowed" disabled>
-                                            Realizar Compra
+                                            No Disponible
                                         </div>
                                         @endif
                                     </form>
@@ -271,7 +291,7 @@ Mi Carrito
             </div>-->
         </div>
     </div>
-
+    
 </div>
 
 @endsection

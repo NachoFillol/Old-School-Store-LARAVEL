@@ -29,7 +29,7 @@ Mi Perfil
                 <!-- iF el usuario inicio sesion -->
                 <h3><?= $mensaje . $user->firstname . ' ' . $user->lastname ?></h3>
                 <h5>Su Cod Usuario es el Nº {{ $user->code }} <small>
-                        @if ($user->created_at != null) | Registro el {{$user->created_at}} @else null @endif
+                        @if ($user->created_at != null) | Registro el {{ $user->created_at->format('d-m-Y H:i:s') }} @else null @endif
                     </small></h5>
 
                 <!-- else -->
@@ -47,9 +47,9 @@ Mi Perfil
             <div class="barra-usuario">
                 <nav>
                     <ul>
-                        <li><a href="#">Mis Compras</a></li>
-                        <li><a href="/customer/cart">Mi Carrito</a></li>
-                        <li><a href="/customer/favorites">Mis Favoritos</a></li>
+                        <li><a href="{{ url('customer/order/history') }}">Mis Compras</a></li>
+                        <li><a href="{{ url('customer/order/cart') }}">Mi Carrito</a></li>
+                        <li><a href="{{ url('customer/order/favorites') }}">Mis Favoritos</a></li>
                     </ul>
                 </nav>
             </div>

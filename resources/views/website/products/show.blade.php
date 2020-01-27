@@ -38,7 +38,8 @@ Detalle Producto
                     <div class="row no-gutters">
                         <aside class="col-sm-6 border-right">
                             <!-- Columna Izquierda -->
-                            <img src="{{ asset($product->image) }}" style="width: 99%">
+                            <img style="width: 99%; {{ @(! $product->stock > 0) ? 'opacity:0.25' : 'null' }}"
+                             src="{{ asset($product->image) }}">
                         </aside> <!-- Fin Columna Izquierda -->
 
                         <aside class="col-sm-6">
@@ -57,7 +58,7 @@ Detalle Producto
                                         <h3>{{ $product->name }}</h3>
                                     </div>
                                     <div class="col-md-2">
-                                        <form action="{{ asset('customer/favorites') }}" method="post" id="add-favoritos">
+                                        <form action="{{ url('customer/favorites') }}" method="post" id="add-favoritos">
                                         @csrf
                                         @if ($is_in_fav)
                                         @method('patch')
@@ -156,7 +157,7 @@ Detalle Producto
                                 </div>
 
                                 <section id="cart-form">
-                                    <form class="form-inline" action="{{ asset('customer/cart/add-del') }}" method="post"
+                                    <form class="form-inline" action="{{ url('customer/cart/add-del') }}" method="post"
                                         id="add-carrito">
                                         @csrf
                                         @if (! $is_cart)
@@ -177,10 +178,23 @@ Detalle Producto
                                             </dl>
                                         </div>
                                         <section id="cart-buttons">
+                                            @if($is_cart && $product->stock > 0)
+                                            <a name="add_id" id="cart-btn" class="btn btn-primary" 
+                                                style="opacity: 0.65; cursor: not-allowed; color: #fff" disabled>
+                                                <span class="text">Agregado al Carrito</span> <i class="fas fa-shopping-cart"></i>
+                                            </a>
+                                            @elseif ($product->stock > 0)
                                             <button type="submit" name="add_id" value="{{ $product->id }}" id="cart-btn" 
-                                                class="btn btn-primary"  <?= $is_cart ? 'disabled' : null ?>>
+                                                class="btn btn-primary">
                                                 <span class="text">Agregar al Carrito</span> <i class="fas fa-shopping-cart"></i>
                                             </button>
+                                            @else
+                                            <div id="cart-btn" class="btn btn-primary" 
+                                                style="background-color: gray; cursor: not-allowed" disabled>
+                                                <span class="text">No Disponible</span> 
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </div>
+                                            @endif
                                             <button type="submit" name="del_id" value="{{ $product->id }}" 
                                                 title="Eliminar del Carrito" id="cart-btn"
                                                 class="btn btn-danger <?= $is_cart ? null : 'isDisabled' ?>">
@@ -202,9 +216,9 @@ Detalle Producto
 
                                 <hr>
 
-                                <a href="#" class="btn btn-primary mb-2" style="width: 100%; border-width: 0">
-                                    Comprar
-                                </a>
+                                @if($product->stock > 0)
+                                <!-- <a href="#" class="btn btn-primary mb-2" style="width: 100%; border-width: 0">Comprar</a> -->
+                                @endif
 
                             </article>
                         </aside> <!-- Fin Columna Derecha -->

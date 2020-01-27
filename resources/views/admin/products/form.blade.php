@@ -146,8 +146,7 @@
     <div class="form-group">
         <label for="descripcion">Descripción Detallada :</label>
         <textarea type="text" rows="8" cols="" class="form-control" placeholder="Descripcion" 
-        name="description_detail" <?= ($method === 'delete') ? 'disabled' : null ?> >
-        {{ old('description_detail', $product->description_detail) }}</textarea>
+        name="description_detail" <?= ($method === 'delete') ? 'disabled' : null ?> >{{ old('description_detail', $product->description_detail) }}</textarea>
 
         <p class="text-danger">{{ $errors->first('descripcion_detail') }}</p>
 

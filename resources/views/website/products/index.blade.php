@@ -38,7 +38,10 @@ Busqueda por Producto
 
             @forelse ($results as $product)
             <div class="card">
-                <img src="{{ asset($product->image) }}" title="Envios a todo el pais" class="card-img-top" alt="...">
+                <img style="{{ @(! $product->stock > 0) ? 'opacity:0.25' : 'null' }}" 
+                src="{{ asset($product->image) }}" 
+                title="{{ @($product->stock > 0) ? 'Tenemos '.$product->stock.' en Stock' : 'Producto Sin Stock' }}" 
+                class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{$product->name}}</h5>
                     <p class="precio">{{$product->currency . $product->price}}</p>
@@ -60,11 +63,14 @@ Busqueda por Producto
             <?php $count = 1 ?>
                 @forelse ($results as $product)
                 <div class="row">
-                    <a href="{{ url('/product/'.$product->id) }}" style="display: inline-flex; align-items: center; justify-content: space-between; height: 80px"
+                    <a href="{{ url('/product/'.$product->id) }}" 
+                        style="display: inline-flex; align-items: center; justify-content: space-between; height: 80px"
                         class="list-group-item list-group-item-action 
                         list-group-item-<?= (($count%2) == 0) ? 'primary':'dark' ?>">  
-                        <img src="{{ asset($product->image) }}" class="" style="width: 50px" alt="...">
-                        {{ $product->name }} - {{ $product->currency . $product->price }} 
+                        <img title="{{ @($product->stock > 0) ? 'Tenemos '.$product->stock.' en Stock' : 'Producto Sin Stock' }}" 
+                        src="{{ asset($product->image) }}" 
+                        class="" style="width: 50px; {{ @(! $product->stock > 0) ? 'opacity:0.25' : 'null' }}" alt="...">
+                        {{ $product->name }} - {{ $product->currency . $product->price }} {{@($product->stock == 0) ? '(sin stock)':null}}
                         <small><i>clic para ver</i></small>
                     </a>
                 </div>

@@ -36,7 +36,10 @@ Categoría Todas
         @foreach ($products as $product)
         <div class="card">
             <div class="img">
-                <img src="{{ asset($product->image) }}" title="Envios a todo el pais" class="card-img-top" alt="...">
+                <img style="{{ @(! $product->stock > 0) ? 'opacity:0.25' : 'null' }}" 
+                src="{{ asset($product->image) }}" 
+                title="{{ @($product->stock > 0) ? 'Tenemos '.$product->stock.' en Stock' : 'Producto Sin Stock' }}" 
+                class="card-img-top" alt="...">
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{$product->name}}</h5>
@@ -102,7 +105,10 @@ Resultados de búsqueda
         @foreach ($result->products as $product)
         <div class="card">
             <div class="img">
-                <img src="{{ asset($product->image) }}" title="Envios a todo el pais" class="card-img-top" alt="...">
+                <img style="{{ @(! $product->stock > 0) ? 'opacity:0.25' : 'null' }}" 
+                src="{{ asset($product->image) }}" 
+                title="{{ @($product->stock > 0) ? 'Tenemos '.$product->stock.' en Stock' : 'Producto Sin Stock' }}" 
+                class="card-img-top" alt="...">
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{$product->name}}</h5>

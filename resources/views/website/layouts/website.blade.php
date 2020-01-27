@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Old School Store - @yield('title')</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap" rel="stylesheet">
+    <!-- <script src="{{ asset('js/main.js') }}"></script> -->
     <!--<link rel="stylesheet" type="text/css" href="css/estilo.css">-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/estilo.css') }}">
 </head>
@@ -38,22 +39,27 @@
           <a class="navbar-brand" href="/"><img src="{{ asset('img/logo.png') }}" alt="Old School Store" id="logo"></a>
         </div>
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            @if (Auth::user() === null)
-            <li class="nav-item"><a class="nav-link" href="/register"><i class="fas fa-user"></i> Crear Cuenta</a></li>
+            @guest
+            <li class="nav-item"><a class="nav-link" href="{{ url('register') }}"><i class="fas fa-user"></i> Crear Cuenta</a></li>
             <li class="nav-item"><a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Abrir Cuenta</a></li>
             @endif
-            @if (Auth::user() !== null)
-            <li class="nav-item"><a class="nav-link" href="#" title="Mis Compras"><i class="fas fa-shopping-bag"></i> Mis Compras</a></li>
-            <li class="nav-item nav-link"><a href="/customer/cart" class="" title="Mi Carrito"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
-              <span style="color: lightgreen; font-weight: normal">
-              ({{ isset(Auth::user()->carts()->openCart()->latest()->first()->products) ? Auth::user()->carts()->openCart()->latest()->first()->products->sum('pivot.product_qty') : '0' }})
-            </span></li>  <!-- count($user->carts[0]->products) -->
-            <li class="nav-item nav-link"><a href="/customer/favorites" class="" title="Mis Favoritos"><i class="fa fa-heart" aria-hidden="true"></i></a>
-              <span style="color: lightgreen; font-weight: normal">
-              ({{ isset(Auth::user()->favorites) ? Auth::user()->favorites->count() : '0' }})
-            </span></li>  <!-- count($user->favorites) -->
-            <li class="nav-item"><a href="/customer/profile"><img class="" src="{{ (Auth::user()->avatar) ? asset('/storage/'.Auth::user()->avatar) : asset('img/avatar/account-100.png') }}" alt="avatar" id="avatar" title="Mi Perfil"></a></li>
-            <!-- <li class="nav-item"><a class="nav-link" id="salir-home" href="customer/logout" title="Salir"><i style="font-size: 1rem" class="fas fa-sign-out-alt"></i></a></li> -->
+            
+            @auth
+            <li class="nav-item"><a class="nav-link" href="{{ url('customer/order/history') }}" title="Mis Compras"><i class="fas fa-shopping-bag"></i> Mis Compras</a></li>
+            <!-- Mi Carrito -->
+            <li class="nav-item nav-link"><a href="{{ url('customer/cart') }}" class="widget-header" title="Mi Carrito">
+            <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart" aria-hidden="true"></i></div>
+            <span class="badge badge-pill badge-danger notify">
+            {{ isset(auth()->user()->cartInProgress()->products) ? auth()->user()->cartInProgress()->products->sum('pivot.product_qty') : '0' }}
+            </span></a></li>
+            <!-- Favoritos -->
+            <li class="nav-item nav-link"><a href="{{ url('customer/favorites') }}" class="widget-header" title="Mis Favoritos">
+            <div class="icon icon-sm rounded-circle border"><i class="fa fa-heart" aria-hidden="true"></i></div>
+            <span class="badge badge-pill badge-danger notify">
+            {{ isset(Auth::user()->favorites) ? Auth::user()->favorites->count() : '0' }}
+            </span></a></li>
+            <!-- Mi Perfil -->
+            <li class="nav-item"><a href="{{ url('customer/profile') }}"><img class="" src="{{ (Auth::user()->avatar) ? asset('/storage/'.Auth::user()->avatar) : asset('img/avatar/account-100.png') }}" alt="avatar" id="avatar" title="Mi Perfil"></a></li>
             <li class="nav-item">
               <div>
                 <a class="nav-link" id="salir-home" href="{{ route('logout') }}" title="Salir"
@@ -126,6 +132,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/range.js') }}"></script> <!-- Script para Range de busqueda avanzada -->
     <script src="{{ asset('js/quantity.js') }}"></script> <!-- Script para cantidad de items cart -->
+    <script src="{{ asset('js/messages.js') }}"></script>
 </body>
 
 </html>

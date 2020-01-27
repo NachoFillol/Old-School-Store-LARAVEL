@@ -31,8 +31,10 @@ Confirmacion Compra
 
                                 <div class="col-md-6">
                                     <figure class="itemside  mb-3">
-                                        <div class="aside"><img style="width: 40px; height: 40px"
+                                        <div class="aside"><img style="width: 40px; height: 40px;
+                                        {{ @(! $product->stock > 0) ? 'opacity:0.25' : 'null' }}"
                                                 src="{{ asset($product->image) }}" class="border img-xs"></div>
+                                        @if($product->stock > 0)     
                                         <figcaption class="info">
                                             <p> {{ $product->name }} </p>
                                             <span>{{ $product->pivot->product_qty }}
@@ -41,11 +43,25 @@ Confirmacion Compra
                                                 <?= $product->currency . number_format($product->price * $product->pivot->product_qty, 2, ',', '') ?>
                                             </span>
                                         </figcaption>
+                                        @else
+                                        <figcaption class="info">
+                                            <p> {{ $product->name }} </p>
+                                            <span>{{ '0' }}
+                                                x <?= $product->currency . '0,00' ?>
+                                                = Total:
+                                                <?= $product->currency . '0,00' ?>
+                                            </span>
+                                        </figcaption>
+                                        @endif
                                     </figure>
                                 </div> <!-- col.// -->
-
-                                <?php $sub1 = $sub1 + ($product->price * $product->pivot->product_qty) ?>
+                                
                                 <!-- Hace la cuenta parcial -->
+                                @if($product->stock > 0)
+                                <?php $subtot = $subtot + ($product->price * $product->pivot->product_qty) ?>
+                                @else
+                                <?php $subtot = $subtot ?>
+                                @endif
                                 
                                 @endforeach
 
@@ -54,39 +70,58 @@ Confirmacion Compra
 
                         <article class="card-body border-top">
 
+                        <!-- Calcula el Descuento -->
+                        <?php $subtot_dto = round($subtot * ($oferta / 100), 2 , PHP_ROUND_HALF_DOWN) ?>
+                        <!-- Calcula el IVA -->
+                        <?php $subtot_iva = round(($subtot - $subtot_dto + $envio) * ($iva / 100), 2 , PHP_ROUND_HALF_DOWN) ?>
+
                             <dl class="row">
+                                <!-- Subtotal -->
                                 <dt class="col-sm-10">Subtotal: <span class="float-right text-muted"><?= $openCart->products->count() ?>
                                         item / <?= $openCart->products->sum('pivot.product_qty') ?> uni</span>
                                 </dt>
+
                                 <dd class="col-sm-2 text-right">
                                     <strong>
-                                        <?= $product->currency . number_format(round($sub1, 2 , PHP_ROUND_HALF_DOWN), 2, ',', '') ?>
-                                    </strong></dd>
+                                        <?= $product->currency . number_format(round($subtot, 2 , PHP_ROUND_HALF_DOWN), 2, ',', '') ?>
+                                    </strong>
+                                </dd>
 
+                                <!-- Descuento -->
                                 <dt class="col-sm-10">Descuento: <span class="float-right text-muted">Oferta
-                                        -<?= $oferta ?>%</span></dt>
+                                        -<?= number_format($oferta, 2, ',', '') ?>%</span>
+                                </dt>
+
                                 <dd class="col-sm-2 text-danger text-right">
                                     <strong>
-                                        <?= $product->currency . number_format(round($sub2 = ($sub1 * (1 - ($oferta / 100))), 2 , PHP_ROUND_HALF_DOWN), 2, ',', '') ?>
-                                    </strong></dd>
+                                        <?= $product->currency . number_format($subtot_dto, 2, ',', '') ?>
+                                    </strong>
+                                </dd>
 
-                                <dt class="col-sm-10">Cargo por Envío: <span class="float-right text-muted">Envío
-                                        express</span></dt>
-                                <dd class="col-sm-2 text-right"><strong>$<?= $envio ?></strong></dd>
+                                <!-- Cargos por envío -->
+                                <dt class="col-sm-10">Cargo por Envío: <span class="float-right text-muted">Envío express</span></dt>
+                                
+                                <dd class="col-sm-2 text-right"><strong>$<?= number_format($envio, 2, ',', '') ?></strong></dd>
 
-                                <dt class="col-sm-10">Impuesto: <span class="float-right text-muted"><?= $iva ?>%</span>
-                                </dt>
+                                <!-- Impuestos -->
+                                <dt class="col-sm-10">Impuesto: <span class="float-right text-muted"><?= number_format($iva, 2, ',', '') ?>%</span></dt>
+
                                 <dd class="col-sm-2 text-right text-success">
                                     <strong>
-                                        <?= $product->currency . number_format(round($subtot = ($sub2 + $envio) * (($iva / 100) + 1), 2 , PHP_ROUND_HALF_DOWN), 2 , ',', '') ?>
-                                    </strong></dd>
+                                        <?= $product->currency . number_format($subtot_iva, 2 , ',', '') ?>
+                                    </strong>
+                                </dd>
 
+                                <!-- Total -->
                                 <dt class="col-sm-9">Total:</dt>
-                                <?php $total = number_format(round($subtot, 2, PHP_ROUND_HALF_DOWN), 2, ',', '') ?>
+
+                                <?php $total = $subtot - $subtot_dto + $envio + $subtot_iva ?>
+
                                 <dd class="col-sm-3 text-right" id="total-price">
                                     <strong class="h5 text-dark">
-                                        {{ $product->currency . $total }}
-                                    </strong></dd>
+                                        <?= $product->currency . number_format($total, 2, ',', '') ?>
+                                    </strong>
+                                </dd>
                             </dl>
 
                             @endif
@@ -133,19 +168,31 @@ Confirmacion Compra
                                     @if ( $openCart->products->isNotEmpty() )
                                     @foreach ($openCart->products as $product)
 
-                                    <?php $sub3 = $sub3 + $product->price * $product->pivot->product_qty ?>
                                     <!-- Hace la cuenta parcial -->
-
+                                    @if($product->stock > 0)
+                                    <?php $subt = $subt + ($product->price * $product->pivot->product_qty) ?>
+                                    @else
+                                    <?php $subt = $subt ?>
+                                    @endif
+                                    
                                     <figure class="itemside mb-3">
-                                        <div class="aside"><img style="" src="{{ asset($product->image) }}"
-                                                class="img-sm border"></div>
+                                        <div class="aside"><img style="{{ @(! $product->stock > 0) ? 'opacity:0.25' : 'null' }}" 
+                                            src="{{ asset($product->image) }}" class="img-sm border">
+                                        </div>
                                         <figcaption class="info align-self-center" id="dropdown">
                                             <p class="title"> <?= $product->name ?> </p>
                                             <div class="price-delete">
+                                                @if($product->stock > 0)
                                                 <div class="price">
                                                     <?= $product->currency . number_format($product->price * $product->pivot->product_qty, 2, ',', '') ?>
                                                     <small><?= '(' . $product->pivot->product_qty . ' uni)' ?></small>
                                                 </div> <!-- price-wrap.// -->
+                                                @else
+                                                <div class="price">
+                                                    <?= $product->currency . '0,00' ?>
+                                                    <small><?= '(0 uni)' ?></small>
+                                                </div> <!-- price-wrap.// -->
+                                                @endif
 
                                                 @if ($openCart->products->count() > 1)
                                                 <!-- Botón Eliminar del carrito, solo si hay mas 1 item -->
@@ -168,15 +215,15 @@ Confirmacion Compra
                                     @endif
 
                                     <div class="price-wrap text-center py-3 border-top">Subtotal: <strong
-                                            class="h5 price">$<?= number_format($sub3, 2, ',', '') ?></strong></div>
+                                            class="h5 price">$<?= number_format($subt, 2, ',', '') ?></strong></div>
                                     <div class="price-wrap text-center py-3">Final: <strong
-                                            class="h5 price">$<?= number_format($subtot, 2, ',', '') ?></strong></div>
+                                            class="h5 price">$<?= number_format($total, 2, ',', '') ?></strong></div>
 
                                     <div class="row" id="puchase-buttons">
                                         <form action="{{ url('customer/purchase/confirm') }}" method="post" id="buy-button">
                                         @csrf
                                         @method('patch')
-                                        <input type="hidden" name="total_price" value="{{ $total}}">
+                                        <input type="hidden" name="total_price" value="{{ $total }}">
                                         <input type="hidden" name="shipping_price" value="{{ $envio }}">
                                         <input type="hidden" name="tax_perc" value="{{ $iva }}">
                                             <button type="submit" name="purchase_id" value="{{ $openCart->products ? $openCart->purchases->first()->id:null }}" 
