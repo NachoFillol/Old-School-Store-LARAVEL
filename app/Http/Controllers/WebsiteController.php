@@ -17,6 +17,19 @@ use App\Contact; // Permite usar el Model Contact
 class WebsiteController extends Controller
 {
     public function test() {
+
+        $products = DB::table('products')->whereBetween('id',[1,13])->get();
+        //$products = Product::whereBetween('id',[1,13])->get();
+        $array_products = $products->toArray();
+
+        // Genera un nuevo array random de 3 id's de productos
+        $random_index = array_rand($array_products,3);
+        //dd($random_index);
+
+        return view('website.test', ['products' => $array_products, 'index' => $random_index, /*'user' => $user, /*'msg' => $msg*/]);
+
+        //$random_item = $array[mt_rand(0, count($array) - 1)];   // Devuelve un random de 1 producto del array
+
         // Referencia a la function active_categories() del proyecto PHP
 
         // LA CONSULTA IDEAL ERA (funciona en phpmyadmin):
@@ -45,8 +58,8 @@ class WebsiteController extends Controller
         // dd($product->category->name);
 
         // Muestra Cuantos Admin existen
-        $rol = User_type::find(1);
-        dd($rol->users);
+        //$rol = User_type::all();
+        //dd($rol->users);
 
         // Muestra El user 1 que rol tiene
         //$user = User::find(1);
@@ -62,20 +75,20 @@ class WebsiteController extends Controller
      */
     public function index()
     {
+        // Genera una coleccion de productos random desde el id 1 hasta el 13
+        $products = Product::whereBetween('id',[1,13])->inRandomOrder()->limit(3)->get();
 
-        return view('website.index', [ /*'user' => $user, /*'msg' => $msg*/]);
-            
-        $products = DB::table('products')->whereBetween('id',[1,13])->get();
+        return view('website.index', ['products' => $products, /*'user' => $user, /*'msg' => $msg*/]);
+
+        // Genera una coleccion de productos random del Total de la coleccion
+        //$products = Product::all()->random(3);
+
+        //$products = DB::table('products')->whereBetween('id',[1,13])->random(3);
+        //dd($products);
+        //$products = DB::table('products')->whereBetween('id',[1,13])->get();
         //$products = Product::whereBetween('id',[1,13])->get();
-        $array = $products->toArray();
 
-        //$random_item = $array[mt_rand(0, count($array) - 1)];   // Devuelve un random de 1 producto del array
-
-        // Genera un nuevo array random de 3 id's de productos
-        $randomProducts = array_rand($array,3);
-        //dd($randomProducts);
         
-
         // $msg = null;
         // if (session('message') !== null) {
         //     $msg = session('message');
